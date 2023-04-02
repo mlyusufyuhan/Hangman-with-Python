@@ -10,40 +10,40 @@ def get_valid_word(words):
     return word
 
 def hangman():
-    word = get_valid_word(words)        
-    word_letters= set(word)
-    alphabet = set(string.ascii_uppercase)
-    used_letters = set() 
+    try:
+        word = get_valid_word(words)
+        word_letters = set(word)
+        alphabet = set(string.ascii_uppercase)
+        used_letters = set()
 
-    lives = 9
+        lives = 9
 
+        while len(word_letters) > 0 and lives > 0:
+            print('You have', lives, 'lives left and have used these letters: ', ' '.join(used_letters))
 
-while len(word_letters) > 0 and lives > 0:
+            word_list = [letter if letter in used_letters else '-' for letter in word]
+            print('Current word: ', ' '.join(word_list))
+            user_letter = input('Guess a letter: ').upper()
 
-    print('you have lives',lives,'you have used these letters', ' '.join(used_letters))
+            if user_letter in alphabet - used_letters:
+                used_letters.add(user_letter)
+                if user_letter in word_letters:
+                    word_letters.remove(user_letter)
+                else:
+                    lives -= 1      
+                    print('Letter is not in word.')
 
-    word_list = [letter if letter in used_letters else '-' for letter in word]
-    print('Current word', ' ' .join(word_list))
-    user_letter= input('Guess the letter:').upper()
-    if used_letter in  alphabet - used_letters:
-     
-      used_letter.add(user_letter)
-      if user_letter in word_letters:
-            word_letters.remove(user_letter)
+            elif user_letter in used_letters:
+                print('You have already guessed that letter. Please try again.')
+            else:
+                print('Invalid character. Please try again.')
 
-      else:
-        lives = lives - 1      
+        if lives == 0:
+            print('Sorry, you died. The word was', word)
+        else:
+            print('Congratulations! You guessed the word', word, '!')
+    
+    except Exception as e:
+        print('An error occurred:', str(e))
 
-    elif user_letter in used_letter:
-            print('you have already used the character please try again')    
-
-    else:
-        print('invalid character. please try again')
-
-if lives == 0:
-    print('you died, sorry. the word was ' , word) 
-else:
-    print ('you have guessed the word', word,'!!')      
-
-
-hangman()      
+hangman()
